@@ -1,0 +1,21 @@
+{
+  "name": "next-workout-app",
+  "version": "1.0.0",
+  "description": "Workout App made with nextjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "^9.2.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "serverless-mysql": "^1.5.3",
+    "sql-template-strings": "^2.2.2"
+  }
+}

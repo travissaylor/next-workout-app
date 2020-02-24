@@ -1,0 +1,8 @@
+{
+    "env": {
+        "MYSQL_HOST": "@mysql-host",
+        "MYSQL_DATABASE": "@ysql-workout-database",
+        "MYSQL_USER": "@mysql-user",
+        "MYSQL_PASSWORD": "@mysql-password"
+    }
+}
