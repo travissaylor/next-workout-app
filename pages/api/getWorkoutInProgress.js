@@ -45,15 +45,6 @@ const GetWorkoutInProgress = async function(req, res) {
         Where id=${req.query.id}
     `);
 
-    // if(logged_workout.length == 0) {
-    //     res.setHeader('Content-Type', 'application/json');
-    //     res.status(200).json({ 
-    //         'workout_template': workout_template[0], 
-    //         'template_exercises': template_exercises, 
-    //     });
-    //     return;
-    // }
-
     const logged_exercises = await db.query(escape`
         SELECT *
         FROM logged_exercises

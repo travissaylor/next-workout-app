@@ -7,11 +7,13 @@ import ProgramPreviewModule from '../components/programPreviewModule';
 class Home extends React.Component {
 
     static async getInitialProps({req}) {
-        const protocol = req.headers['x-forwarded-proto'] ? req.headers['x-forwarded-proto'] : 'http';
-        const host = req ? req.headers['x-forwarded-host'] : location.host;
+        // const protocol = 'http';
+        // const host = req ? req.headers['x-forwarded-host'] : location.host;
         const id = 1; // Replicating User Login
 
-        const pageRequest = `${protocol}://${host}/api/GetUser?id=${id}`;
+        console.log("Base url", process.env.API_BASE_URL);
+
+        const pageRequest = `${process.env.API_BASE_URL || 'http://localhost:3000'}/api/GetUser?id=${id}`;
 
         const res = await fetch(pageRequest);
         const json = await res.json();

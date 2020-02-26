@@ -1,8 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 
-import InProgressWorkoutModule from '../../components/workoutInProgress/workoutModule';
-import InProgressExerciseModule from '../../components/workoutInProgress/exerciseModule';
-
+import RoutineModule from '../../components/workoutInProgress/routineModule';
 
 class WorkoutInProgress extends React.Component {
     
@@ -27,9 +25,8 @@ class WorkoutInProgress extends React.Component {
     render() {
         return(
             <div>
-                <h1>Workout Here</h1>
-                <InProgressWorkoutModule workout={this.props.data.workout}/>
-                <InProgressExerciseModule exercises={this.props.data.exercises}/>
+                <h1>{this.props.data.workout.split_type} {this.props.data.workout.session_type} Workout</h1>
+                <RoutineModule exercises={this.props.data.exercises}/>
             </div>
         );
     }
