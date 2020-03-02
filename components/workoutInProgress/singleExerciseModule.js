@@ -8,6 +8,7 @@ class SingleExerciseModule extends React.Component {
             name: props.exercise.name,
             muscle_group: props.exercise.muscle_group,
         }
+        console.log('Single Ex props',this.props)
     }
 
     render() {
@@ -16,9 +17,7 @@ class SingleExerciseModule extends React.Component {
             <div>
                 <h5>{name}</h5>
                 <p>{muscle_group}</p>
-                <form>
-                    <SetModule sets={this.props.exercise.sets} />
-                </form>
+                    <SetModule exId={this.props.exercise.id} sets={this.props.exercise.sets} />
             </div>
         );
     }

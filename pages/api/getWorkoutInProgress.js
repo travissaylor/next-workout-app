@@ -2,24 +2,62 @@ const db = require('../../lib/db');
 const escape = require('sql-template-strings');
 
 const GetWorkoutInProgress = async function(req, res) {
+    const dateToMysqlFormat = function() {
+        var date;
+        date = new Date();
+        date = date.getUTCFullYear() + '-' +
+            ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+            ('00' + date.getUTCDate()).slice(-2);
+        return date;
+    }
    
     const mapedWorkout = function(template, log, temp_ex, log_ex) {
-        var workout = {
-            split_type: template.split_type,
-            session_type: template.session_type,
-            total_time: log.total_time,
-            status: log.curent,
-            date: log.date,
-        };
-
+        var workout = {};
+        if(!template) {
+            res.status(401);
+            res.end();
+            return;
+        }
+        if(log) {
+            workout = {
+                split_type: template.split_type,
+                session_type: template.session_type,
+                total_time: log.total_time,
+                status: log.status,
+                date: log.date,
+                template_id: parseInt(req.query.id),
+                log_id: log.id,
+                program_id: template.program_id
+            };
+        } else {
+            workout = {
+                split_type: template.split_type,
+                session_type: template.session_type,
+                total_time: template.total_time,
+                status: 'current',
+                date: dateToMysqlFormat(),
+                template_id: parseInt(req.query.id),
+                log_id: null,
+                program_id: template.program_id
+            };
+        }
+        
         var exercises = [];
 
         temp_ex.forEach(function(exercise, index) {
+            var sets = [];
+            if(log_ex[index]) {
+                sets = JSON.parse(log_ex[index].sets).sets;
+            } else {
+                for(var i=0; i<exercise.sets-1; i++) {
+                    sets[i] = {weight: null, reps: null, notes: ''}
+                }
+            }
             var ex_item = {
                 id: exercise.id,
                 name: exercise.name,
                 muscle_group: exercise.muscle_group,
-                sets: (log_ex[index]) ? log_ex[index].sets : exercise.sets
+                sets: sets
             }
             exercises.push(ex_item);
         });
@@ -28,7 +66,7 @@ const GetWorkoutInProgress = async function(req, res) {
     }
 
     const workout_template = await db.query(escape`
-        SELECT split_type, session_type
+        SELECT program_id, split_type, session_type
         FROM workout_templates
         Where id=${req.query.id}
     `);

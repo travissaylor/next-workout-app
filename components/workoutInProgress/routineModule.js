@@ -9,14 +9,13 @@ class RoutineModule extends React.Component {
     render() {
         return(
             <div>
-                
                 <h3>Exercises</h3>
                 <div>
                     {this.props.exercises.map(function(exercise, index) {
                         return(
                             <SingleExerciseModule key={index} exercise={exercise}/>
                         );
-                    }.bind(this))}
+                    })}
                 </div>
             </div>
         )
