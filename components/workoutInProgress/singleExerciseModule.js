@@ -1,4 +1,5 @@
 import SetModule from './setsModule';
+import {withExerciseContext} from './contextConfig';
 
 class SingleExerciseModule extends React.Component {
 
@@ -9,6 +10,12 @@ class SingleExerciseModule extends React.Component {
             muscle_group: props.exercise.muscle_group,
         }
         console.log('Single Ex props',this.props)
+        this.handleAddSet = this.handleAddSet.bind(this);
+    }
+
+    handleAddSet(e) {
+        e.preventDefault();
+        this.props.value.addSet(this.props.exercise.id);
     }
 
     render() {
@@ -18,9 +25,10 @@ class SingleExerciseModule extends React.Component {
                 <h5>{name}</h5>
                 <p>{muscle_group}</p>
                     <SetModule exId={this.props.exercise.id} sets={this.props.exercise.sets} />
+                    <button onClick={this.handleAddSet}>Add a Set</button>
             </div>
         );
     }
 }
 
-export default SingleExerciseModule;
+export default withExerciseContext(SingleExerciseModule);

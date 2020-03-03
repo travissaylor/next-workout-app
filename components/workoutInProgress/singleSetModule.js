@@ -9,7 +9,14 @@ class SingleSetModule extends React.Component {
             notes: props.set.notes
         }
         this.handleChange = this.handleChange.bind(this);
+        this.handleDeleteSet = this.handleDeleteSet.bind(this);
         console.log('value', this.props.value);
+    }
+
+    handleDeleteSet(e) {
+        e.preventDefault();
+
+        this.props.value.deleteSet(this.props.exId, this.props.index);
     }
 
     handleChange(e) {
@@ -27,6 +34,7 @@ class SingleSetModule extends React.Component {
                 <p>Weight: {this.props.set.weight} <input onChange={this.handleChange} name='weight' type='number' defaultValue={this.props.set.weight} /></p>
                 <p>Reps: {this.props.set.reps} <input onChange={this.handleChange} name='reps' type='number' defaultValue={this.props.set.reps} /></p>
                 <p>Notes: {this.props.set.notes} <input onChange={this.handleChange} name='notes' type='text' defaultValue={this.props.set.notes} /></p>
+                <button onClick={this.handleDeleteSet}>Delete Set</button>
             </div>
         )
     }

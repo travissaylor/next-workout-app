@@ -1,9 +1,17 @@
 import SingleExerciseModule from './singleExerciseModule';
+import {withExerciseContext} from './contextConfig';
 
 class RoutineModule extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log('routine props',this.props);
+        this.handleAddExercise = this.handleAddExercise.bind(this);
+    }
+
+    handleAddExercise(e) {
+        e.preventDefault();
+        this.props.value.addExercise();
     }
 
     render() {
@@ -11,15 +19,18 @@ class RoutineModule extends React.Component {
             <div>
                 <h3>Exercises</h3>
                 <div>
-                    {this.props.exercises.map(function(exercise, index) {
+                    {this.props.value.exercises.map(function(exercise, index) {
                         return(
-                            <SingleExerciseModule key={index} exercise={exercise}/>
+                            <div>
+                                <SingleExerciseModule key={index} exercise={exercise}/>
+                            </div>
                         );
                     })}
                 </div>
+                <button onClick={this.handleAddExercise}>Add an Exercise</button>
             </div>
         )
     }
 }
 
-export default RoutineModule;
+export default withExerciseContext(RoutineModule);
