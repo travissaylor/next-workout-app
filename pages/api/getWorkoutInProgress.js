@@ -46,7 +46,9 @@ const GetWorkoutInProgress = async function(req, res) {
 
         temp_ex.forEach(function(exercise, index) {
             var sets = [];
+            var ex_log_id = null;
             if(log_ex[index]) {
+                ex_log_id = log_ex[index].id;
                 sets = JSON.parse(log_ex[index].sets).sets;
             } else {
                 for(var i=0; i<exercise.sets-1; i++) {
@@ -55,6 +57,7 @@ const GetWorkoutInProgress = async function(req, res) {
             }
             var ex_item = {
                 id: exercise.id,
+                ex_log_id: ex_log_id,
                 name: exercise.name,
                 muscle_group: exercise.muscle_group,
                 sets: sets
@@ -80,7 +83,7 @@ const GetWorkoutInProgress = async function(req, res) {
     const logged_workout = await db.query(escape`
         SELECT *
         FROM workout_logs
-        Where id=${req.query.id}
+        Where template_id=${req.query.id}
     `);
 
     const logged_exercises = await db.query(escape`

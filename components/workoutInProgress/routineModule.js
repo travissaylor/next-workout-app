@@ -21,8 +21,8 @@ class RoutineModule extends React.Component {
                 <div>
                     {this.props.value.exercises.map(function(exercise, index) {
                         return(
-                            <div>
-                                <SingleExerciseModule key={index} exercise={exercise}/>
+                            <div key={index}>
+                                <SingleExerciseModule exercise={exercise}/>
                             </div>
                         );
                     })}

@@ -17,15 +17,11 @@ class ExerciseProvider extends React.Component {
 
     constructor(props) {
         super(props);
-        var mappedState = {
-            exercises: []
-        }
-        this.props.exercises.forEach((exercise) => {
-            mappedState.exercises.push({id: exercise.id, name: exercise.name, muscle_group: exercise.muscle_group, sets: exercise.sets});
-        });
-        console.log("mapped exercises", mappedState.exercises);
+        console.log("props exercises", this.props.exercises);
 
-        this.state = mappedState;
+        this.state = {
+            exercises: this.props.exercises
+        };
         this.updateSetArrib = this.updateSetArrib.bind(this);
         this.addSet = this.addSet.bind(this);
         this.deleteSet = this.deleteSet.bind(this);
@@ -55,6 +51,7 @@ class ExerciseProvider extends React.Component {
     }
 
     addSet(exId) {
+        console.log('Add Set exId', exId);
         this.setState(function(prevState) {
             var newSet = prevState.exercises[exId-1]
             newSet.sets.push({weight: null, reps: null, notes: ''});

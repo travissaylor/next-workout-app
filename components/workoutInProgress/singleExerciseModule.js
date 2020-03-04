@@ -15,7 +15,7 @@ class SingleExerciseModule extends React.Component {
 
     handleAddSet(e) {
         e.preventDefault();
-        this.props.value.addSet(this.props.exercise.id);
+        this.props.value.addSet(this.props.exercise.log_ex_id);
     }
 
     render() {
@@ -24,7 +24,7 @@ class SingleExerciseModule extends React.Component {
             <div>
                 <h5>{name}</h5>
                 <p>{muscle_group}</p>
-                    <SetModule exId={this.props.exercise.id} sets={this.props.exercise.sets} />
+                    <SetModule exId={this.props.exercise.log_ex_id} sets={this.props.exercise.sets} />
                     <button onClick={this.handleAddSet}>Add a Set</button>
             </div>
         );

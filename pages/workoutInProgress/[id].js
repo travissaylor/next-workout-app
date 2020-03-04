@@ -67,6 +67,7 @@ class WorkoutInProgress extends React.Component {
             }
         }
         const data = await apiRes.json();
+
         return { data };
     }
 

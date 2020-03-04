@@ -10,7 +10,6 @@ class SingleSetModule extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleDeleteSet = this.handleDeleteSet.bind(this);
-        console.log('value', this.props.value);
     }
 
     handleDeleteSet(e) {

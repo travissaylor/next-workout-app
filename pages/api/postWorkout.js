@@ -1,9 +1,44 @@
-import SetsModule from '../../components/workoutInProgress/setsModule';
-
 const db = require('../../lib/db');
 const escape = require('sql-template-strings');
 
 const PostWorkout = async function(req, res) {
+
+    const dateToMysqlFormat = function(date) {
+        var date;
+        date = new Date(date);
+        date = date.getUTCFullYear() + '-' +
+            ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+            ('00' + date.getUTCDate()).slice(-2);
+        return date;
+    }
+
+    const mysqlExerciseQuery = async function(exercises, uid, log_id) {
+        // var insert_exercise_log_query = 
+        // `INSERT INTO logged_exercises (id, user_id, log_id, name, sets, template_ex_id) VALUES `;
+
+        var insert_exercise_log_query = null;
+        console.log("LENGTH",Object.keys(exercises).length);
+        var count = 0;
+        var exercisesLength = Object.keys(exercises).length;
+
+        for(const exercise in exercises) {
+            var insert_exercise_log_query = `INSERT INTO logged_exercises (id, user_id, log_id, name, sets, template_ex_id) 
+            VALUES (${exercises[exercise].ex_log_id}, ${uid}, ${log_id}, "${exercises[exercise].name}", '${JSON.stringify({sets: exercises[exercise].sets})}', ${exercises[exercise].id})`;
+
+            insert_exercise_log_query += ` ON DUPLICATE KEY UPDATE sets = '${JSON.stringify({sets: exercises[exercise].sets})}';`
+            console.log('Ex QUERY', insert_exercise_log_query);
+            const exercise_log_result = await db.query(insert_exercise_log_query);
+            if(exercise_log_result.error) {
+                return exercise_log_result;
+                break;
+            }
+
+            count++;
+        }
+
+
+        return 'success';
+    }
 
     const user_id = 1;
 
@@ -53,7 +88,6 @@ const PostWorkout = async function(req, res) {
                 insert_exercise_log_query += `(${user_id}, ${insert_workout_log.insertId}, "${exercises[exercise].name}", '${JSON.stringify({sets: exercises[exercise].sets})}', ${exercises[exercise].id}),`;
             }
 
-
             count++;
         }
 
@@ -69,6 +103,35 @@ const PostWorkout = async function(req, res) {
         
     } else {
         console.log('Need to update');
+
+        var date = dateToMysqlFormat(workout.date);
+
+        const insert_workout_log = await db.query(escape`
+            UPDATE workout_logs
+            SET total_time = ${workout.total_time}, status = ${status}, date = ${date}
+            WHERE id = ${workout.log_id};
+        `)
+
+        if(insert_workout_log.error) {
+            console.log(insert_workout_log.error);
+            res.status(500).json({insert_workout_log});
+            res.end();
+            return;
+        }
+
+        var exerciseQueryRes = await mysqlExerciseQuery(exercises, user_id, workout.log_id);
+
+        if(exerciseQueryRes.error) {
+            console.log(exerciseQueryRes.error);
+            res.status(500).json(exerciseQueryRes.error);
+            res.end();
+            return;
+        }
+
+        console.log(exerciseQueryRes);
+
+        res.status(200).json({exerciseQueryRes});
+
     }
 
     // const update_workout_log = await db.query(escape`
