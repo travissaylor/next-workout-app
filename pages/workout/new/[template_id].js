@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 
-import ExerciseProvider from '../../../components/workoutInProgress/contextConfig';
-import FormSubmitWrapper from '../../../components/workoutInProgress/formSubmitWrapper';
+import TemplateProvider from '../../../components/workoutTemplate/templateContext';
+import FormSubmitWrapper from '../../../components/workoutTemplate/formSubmitWrapper';
+import Layout from '../../../components/util/layout';
 
 class NewWorkout extends React.Component {
 
@@ -22,14 +23,12 @@ class NewWorkout extends React.Component {
     }
 
     render() {
-
-        console.log('workout',this.props.workout)
         return(
-            <div>
-                <ExerciseProvider workout={this.props.workout} exercises={this.props.exercises}>
+            <Layout title="Workout Template">
+                <TemplateProvider workout={this.props.workout} exercises={this.props.exercises}>
                     <FormSubmitWrapper {...this.props}/>
-                </ExerciseProvider>
-            </div>
+                </TemplateProvider>
+            </Layout>
         );
     }
 }

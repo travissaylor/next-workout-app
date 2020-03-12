@@ -6,7 +6,7 @@ const GetWorkoutTemplate = async function(req, res) {
     const program = await db.query(escape`
         SELECT *
         FROM workout_programs
-        Where id=${req.query.id}
+        Where program_id=${req.query.id}
     `);
 
     const phases = await db.query(escape`

@@ -3,6 +3,11 @@ import Link from 'next/link';
 
 import WorkoutPreviewModule from '../components/workoutPreviewModule';
 import ProgramPreviewModule from '../components/programPreviewModule';
+import PreviousWorkoutModule from '../components/previousWorkoutsModule';
+
+// import TopNav from '../components/util/topNav';
+import Layout from '../components/util/layout';
+import { Grid } from '@material-ui/core';
 
 class Home extends React.Component {
 
@@ -29,17 +34,20 @@ class Home extends React.Component {
         const {user} = this.props;
 
         return(
-            <div>
+            <Layout title='Dashboard'>
                 <h1>Trav's Workout App</h1>
-                <WorkoutPreviewModule user={user.id} />
-                <ProgramPreviewModule user={user.id} />
-                <div>
-                    <h3>Previous Workouts</h3>
-                    <Link href="/" >
-                        <button>View Previous Workouts</button>
-                    </Link>
-                </div>
-            </div>
+                <Grid container spacing={2}>
+                    <Grid container item xs={12} sm={6}>
+                        <WorkoutPreviewModule user={user.current_workout_id} />
+                    </Grid>
+                    <Grid container item xs={12} sm={6}>
+                        <ProgramPreviewModule user={user.id} />
+                    </Grid>
+                    <Grid container item xs={12} sm={6}>
+                        <PreviousWorkoutModule user={user.id} />
+                    </Grid>
+                </Grid>
+            </Layout>
         )      
     }
 }

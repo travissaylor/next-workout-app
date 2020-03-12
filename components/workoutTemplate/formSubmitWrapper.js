@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-unfetch';
+import Router from 'next/router'
 
-import {withExerciseContext} from '../../components/workoutInProgress/contextConfig';
-import RoutineModule from '../../components/workoutInProgress/routineModule';
+import {withTemplateContext} from './templateContext';
+import RoutineModule from './routineModule';
 
 const FormSubmitWrapper = class FormWrapper extends React.Component {
     constructor(props) {
@@ -13,14 +14,14 @@ const FormSubmitWrapper = class FormWrapper extends React.Component {
         e.preventDefault();
         e.persist();
 
-        console.log('submit exercises', this.props.value.exercises);
+        console.log('submit value', this.props.workout);
 
         var exercises = JSON.stringify(this.props.value.exercises);
         var workout = JSON.stringify(this.props.workout);
         exercises = encodeURIComponent(exercises);
         workout = encodeURIComponent(workout);
 
-        const postRequest = `http://localhost:3000/api/post/workoutlog?exercises=${exercises}&workout=${workout}`;
+        const postRequest = `http://localhost:3000/api/post/logFromTemplate?exercises=${exercises}&workout=${workout}`;
         console.log(postRequest);
         const res = await fetch(postRequest, {
             method: 'post'
@@ -31,7 +32,9 @@ const FormSubmitWrapper = class FormWrapper extends React.Component {
             return;
         }
 
-        console.log("Workout Sent", res);
+        const resData = await res.json();
+
+        Router.push('/workout/logged/' + resData.insertId);
     }
 
     render() {
@@ -40,11 +43,11 @@ const FormSubmitWrapper = class FormWrapper extends React.Component {
                 <h1>{this.props.workout.split_type} {this.props.workout.session_type} Workout</h1>
                 <form onSubmit={this.submitHandler}>
                     <RoutineModule exercises={this.props.exercises}/>
-                    <input type="submit" name="submit" onClick={this.submitHandler}/>
+                    <input type="submit" name="submit" value="Start Workout From this Template" onClick={this.submitHandler}/>
                 </form>
             </div>
         )
     }
 }
 
-export default withExerciseContext(FormSubmitWrapper);
+export default withTemplateContext(FormSubmitWrapper);

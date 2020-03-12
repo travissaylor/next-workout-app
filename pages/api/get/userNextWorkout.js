@@ -5,14 +5,14 @@ const GetWorkoutTemplate = async function(req, res) {
 
     const workout = await db.query(escape`
         SELECT *
-        FROM workout_logs
-        Where log_id=${req.query.id}
+        FROM workout_templates
+        Where template_id=${req.query.id}
     `);
 
     const exercises = await db.query(escape`
         SELECT *
-        FROM logged_exercises
-        Where log_id=${req.query.id}
+        FROM template_exercises
+        Where template_id=${req.query.id}
     `);
 
     if(workout.error || exercises.error) {

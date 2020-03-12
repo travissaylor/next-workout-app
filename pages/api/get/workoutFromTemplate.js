@@ -3,7 +3,7 @@ const escape = require('sql-template-strings');
 
 const GetWorkoutFromTemplate = async function(req, res) {
 
-    const mapTemplateToLog = function(workout_template, template_exercises, workout_log_count, user_id) {
+    const mapTemplateToLog = function(workout_template, template_exercises, workout_log_count, logged_exercise_count, user_id) {
         var workoutLog = {
             workout: {
                 log_id: workout_log_count + 1,
@@ -17,21 +17,19 @@ const GetWorkoutFromTemplate = async function(req, res) {
             exercises: []
         }
 
+        var current_log_ex_id = logged_exercise_count + 1;
         template_exercises.forEach(function(exercise, index) {
             var newExercise = {
-                log_ex_id: index + 1,
+                log_ex_id: current_log_ex_id,
                 log_id: workout_log_count + 1,
                 name: exercise.name,
                 muscle_group: exercise.muscle_group,
                 user_id: user_id,
-                sets: []
+                sets: exercise.sets
             };
 
-            for(var i = 0; i < exercise.sets - 1; i++) {
-                newExercise.sets.push({weight: null, reps: null, notes: ''});
-            }
-
             workoutLog.exercises.push(newExercise);
+            current_log_ex_id++;
         });
 
         return workoutLog;
@@ -59,7 +57,11 @@ const GetWorkoutFromTemplate = async function(req, res) {
 
     const workout_log_count = await db.query(escape`
         SELECT COUNT(*) FROM workout_logs;
-    `)
+    `);
+
+    const logged_exercises_count = await db.query(escape`
+        SELECT COUNT(*) FROM logged_exercises;
+    `);
 
     if(workout_log_count.error) {
         res.status(500).json(workout_log_count.error);
@@ -68,7 +70,8 @@ const GetWorkoutFromTemplate = async function(req, res) {
 
     const user_id = 1;
 
-    const mapped_workout_log = mapTemplateToLog(workout_template[0], template_exercises, workout_log_count[0]['COUNT(*)'], user_id);
+    const mapped_workout_log = mapTemplateToLog(workout_template[0], template_exercises, workout_log_count[0]['COUNT(*)'],logged_exercises_count[0]['COUNT(*)'], user_id);
+    console.log('mapped_workout_log', mapped_workout_log.exercises[0].sets);
 
     res.status(200).json(mapped_workout_log);
 }
